@@ -3,12 +3,10 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using starwars_api_net_core.Models;
 using starwars_api_net_core.Models.ViewModels;
-using starwars_api_net_core.Models.ViewModels.ForeignEntities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
+
 #nullable enable
 namespace starwars_api_net_core.Controllers
 {
@@ -16,20 +14,13 @@ namespace starwars_api_net_core.Controllers
   public class PeopleController : ControllerBase
   {
     private IPeopleRepository _peopleRepository;
-    private IFilmRepository _filmRepository;
     private ILogger<PeopleController> _logger;
-    private IPlanetRepository _planetRepository;
-    public PeopleController(
-      IPeopleRepository pRepo,
-      IFilmRepository fRepo,
-      IPlanetRepository plRepo,
-      ILogger<PeopleController> logger
-     )
+
+
+    public PeopleController(IPeopleRepository pRepo, ILogger<PeopleController> logger)
     {
       _peopleRepository = pRepo;
-      _filmRepository = fRepo;
       _logger = logger;
-      _planetRepository = plRepo;
     }
 
     [HttpGet]
@@ -58,39 +49,14 @@ namespace starwars_api_net_core.Controllers
 
     [HttpPost]
     [Route("add")]
-    public async Task<IActionResult> Add([FromBody]PeopleResponseViewModel people)
+    public async Task<IActionResult> Add([FromBody]PeopleViewModel people)
     {
-      var (Name, Height, Mass, HairColor, SkinColor, EyeColor, BirthYear, Gender, HomeWorld, Films) = people;
-      var newPeople = new People
+
+      AddEntityResponse<People> newPeopleAdded = await _peopleRepository.Add(people);
+
+      if (newPeopleAdded.EntitySuccessfullyAdded)
       {
-        Name = Name,
-        Height = Height,
-        Mass = Mass,
-        HairColor = HairColor,
-        SkinColor = SkinColor,
-        EyeColor = EyeColor,
-        BirthYear = BirthYear,
-        Gender = Gender
-      };
-
-
-      if (Films != null)
-      {
-        var peopleFilms = people.Films.Select(film => new PeopleFilms { FilmId = film.Id, PeopleId = newPeople.Id }).ToList();
-        newPeople.Films = peopleFilms;
-      }
-
-
-      if (HomeWorld != null)
-      {
-        newPeople.HomeWorld = await _planetRepository.GetById(HomeWorld.Id);
-      }
-
-      bool newPeopleAdded = await _peopleRepository.Add(newPeople);
-
-      if (newPeopleAdded)
-      {
-        return RedirectToAction(nameof(Get), new { Id = newPeople.Id });
+        return RedirectToAction(nameof(Get), new { Id = newPeopleAdded.Entity.Id });
       }
 
 
