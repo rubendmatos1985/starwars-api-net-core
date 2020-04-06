@@ -19,8 +19,18 @@ namespace starwars_api_net_core.Controllers
     [Route("")]
     public async Task<IActionResult> Get([FromQuery]Guid? Id, [FromQuery] string? Name)
     {
-      
+      if (Id != null)
+      {
+        var result = await _speciesRepository.GetById((Guid)Id);
+        return Ok(new { status = "success", data = result });
+      }
 
+      if (Name != null)
+      {
+        var result = await _speciesRepository.GetById((Guid)Id);
+        return Ok(new { status = "success", data = result });
+      }
+      return Ok(new { status = "error", data = "Not Found" });
     }
   }
 }
