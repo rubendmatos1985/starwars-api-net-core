@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 #nullable enable
 namespace starwars_api_net_core.Models.ViewModels
 {
-  public class PeopleResponseViewModel
+  public class PeopleViewModel
   {
     public Guid? Id;
 
