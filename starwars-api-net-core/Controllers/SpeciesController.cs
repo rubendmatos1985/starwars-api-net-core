@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace starwars_api_net_core.Controllers
 {
   [Route("species")]
@@ -28,7 +30,7 @@ namespace starwars_api_net_core.Controllers
 
       if (Name != null)
       {
-        var result = await _speciesRepository.GetById((Guid)Id);
+        var result = await _speciesRepository.GetByName(Name);
         return Ok(new { status = "success", data = result });
       }
       return Ok(new { status = "error", data = "Not Found" });
