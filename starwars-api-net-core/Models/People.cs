@@ -33,5 +33,7 @@ namespace starwars_api_net_core.Models
     public virtual Planet? HomeWorld { get; set; }
 
     public ICollection<PeopleFilms>? Films { get; set; }
+
+    public ICollection<VehiclePilot>? Vehicles { get; set; }
   }
 }
