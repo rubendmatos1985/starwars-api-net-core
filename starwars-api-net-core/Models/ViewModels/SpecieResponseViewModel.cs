@@ -21,5 +21,34 @@ namespace starwars_api_net_core.Models.ViewModels
     public string Language { get; set; }
     public IEnumerable<PeopleData>? People { get; set; }
     public ICollection<FilmData>? Films { get; set; }
+
+    public void Deconstruct(
+      out string name,
+      out string classif,
+      out string des,
+      out int avgH,
+      out string skinC,
+      out string eyeC,
+      out string hairC,
+      out int avgLife,
+      out Planet home,
+      out string lang,
+      out IEnumerable<PeopleData>? peopD,
+      out IEnumerable<FilmData>? filmD
+      )
+    {
+      name = Name;
+      classif = Classification;
+      des = Designation;
+      avgH = AverageHeight;
+      skinC = SkinColors;
+      eyeC = EyeColors;
+      hairC = HairColors;
+      avgLife = AverageLifespan;
+      home = Homeworld;
+      lang = Language;
+      peopD = People;
+      filmD = Films;
+    }
   }
 }
