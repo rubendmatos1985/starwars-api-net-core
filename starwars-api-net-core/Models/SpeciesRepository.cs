@@ -33,8 +33,8 @@ namespace starwars_api_net_core.Models
 
     public Task<Specie> GetById(Guid id) =>
       _context.Species
-        .FindAsync(id)
-        .AsTask();
+        .Include(sp => sp.Homeworld)
+        .FirstOrDefaultAsync(sp => sp.Id == id);
 
 
     public Task<List<Specie>> GetByName(string name) =>
