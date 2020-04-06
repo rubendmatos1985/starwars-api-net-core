@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using starwars_api_net_core.Models.ViewModels;
+using starwars_api_net_core.Models.ViewModels.ForeignEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace starwars_api_net_core.Models
       _context = ctxt;
     }
 
-    public IEnumerable<Vehicle> Vehicles => throw new NotImplementedException();
+    public IEnumerable<Vehicle> Vehicles => _context.Vehicles.AsEnumerable();
 
     public async Task<AddEntityResponse<Vehicle>> Add(VehicleViewModel vehicle)
     {
@@ -82,9 +83,31 @@ namespace starwars_api_net_core.Models
       }
     }
 
-    public Task<Vehicle> GetById(Guid id)
+    public Task<List<VehicleViewModel>> GetById(Guid id)
     {
-      return _context.Vehicles.FindAsync(id).AsTask();
+      return _context.Vehicles
+        .Include(v => v.Films)
+        .Include(v => v.Pilots)
+        .Where(v => v.Id == id)
+        .Select(v => new VehicleViewModel
+        {
+          Id = v.Id,
+          Name = v.Name,
+          Model = v.Model,
+          Manufacturer = v.Manufacturer,
+          MaxAtmospheringSpeed = (int)v.MaxAtmosphericSpeed,
+          Crew = v.Crew,
+          Passengers = v.Passengers,
+          CargoCapacity = v.CargoCapacity,
+          Consumables = v.Consumables,
+          VehicleClass = v.VehicleClass,
+          Pilots = v.Pilots.Select(pv => new PeopleData { Id = pv.People.Id, Name = pv.People.Name }),
+          Films = v.Films.Select(vf => new FilmData { Id = vf.Film.Id, Title = vf.Film.Title }),
+          CostInCredits = v.CostInCredits,
+          Length = v.Length
+        })
+        .AsNoTracking()
+        .ToListAsync();
     }
 
     public Task<List<Vehicle>> GetByName(string name)
