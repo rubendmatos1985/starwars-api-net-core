@@ -52,12 +52,35 @@ namespace starwars_api_net_core
         .HasOne(fs => fs.Specie)
         .WithMany(s => s.Films)
         .HasForeignKey(f => f.SpecieId);
+
+
+      builder.Entity<VehicleFilm>()
+        .HasKey(vf => new { vf.FilmId, vf.VehicleId });
+
+      builder.Entity<VehicleFilm>()
+        .HasOne(vf => vf.Film)
+        .WithMany(f => f.Vehicles)
+        .HasForeignKey(v => v.FilmId);
+      builder.Entity<VehicleFilm>()
+        .HasOne(vf => vf.Vehicle)
+        .WithMany(vf => vf.Films)
+        .HasForeignKey(f => f.VehicleId);
+
+      builder.Entity<VehiclePilot>()
+        .HasKey(vp => new { vp.VehicleId, vp.PeopleId });
+      builder.Entity<VehiclePilot>()
+        .HasOne(vp => vp.Vehicle)
+        .WithMany(v => v.Pilots)
+        .HasForeignKey(p => p.VehicleId);
+      builder.Entity<VehiclePilot>()
+        .HasOne(vp => vp.People)
+        .WithMany(p => p.Vehicles)
+        .HasForeignKey(v => v.PeopleId);
   
     }
 
     public DbSet<People> People { get; set; }
     public DbSet<Film> Films { get; set; }
-    public DbSet<PeopleFilms> PeopleFilms { get; set; }
     public DbSet<Planet> Planets { get; set; }
     public DbSet<Specie> Species { get; set; }
   }
