@@ -22,29 +22,56 @@ namespace starwars_api_net_core.Models
       _logger = logger;
     }
 
-    public async Task<bool> Add(People people)
+    public async Task<AddEntityResponse<People>> Add(PeopleViewModel people)
     {
+      var (Name, Height, Mass, HairColor, SkinColor, EyeColor, BirthYear, Gender, HomeWorld, Films) = people;
+      var newPeople = new People
+      {
+        Name = Name,
+        Height = Height,
+        Mass = Mass,
+        HairColor = HairColor,
+        SkinColor = SkinColor,
+        EyeColor = EyeColor,
+        BirthYear = BirthYear,
+        Gender = Gender
+      };
+
+      if (Films != null)
+      {
+        var peopleFilms = people.Films.Select(film => new PeopleFilms { FilmId = film.Id, PeopleId = newPeople.Id }).ToList();
+        newPeople.Films = peopleFilms;
+      }
+
+      if (HomeWorld != null)
+      {
+        var peopleHomeworld = new Planet { Id = HomeWorld.Id };
+        _context.Planets.Attach(peopleHomeworld);
+        newPeople.HomeWorld = peopleHomeworld;
+      }
+
       try
       {
-        await _context.People.AddAsync(people);
+        await _context.People.AddAsync(newPeople);
         await _context.SaveChangesAsync();
-        return true;
+        return new AddEntityResponse<People> { EntitySuccessfullyAdded = true, Entity = newPeople };
       }
+
       catch (DbUpdateException ex)
       {
         _logger.LogInformation($"PeopleRpository::Add -> { ex.Message }");
-        return false;
+        return new AddEntityResponse<People> { EntitySuccessfullyAdded = false, Entity = newPeople };
       }
 
     }
 
-    public Task<List<PeopleResponseViewModel>> GetByGender(string gender) =>
+    public Task<List<PeopleViewModel>> GetByGender(string gender) =>
       _context.People
         .Include(p => p.HomeWorld)
         .Include(p => p.Films)
         .ThenInclude(pf => pf.Film)
         .Where(p => p.Gender == gender)
-        .Select(p => new PeopleResponseViewModel
+        .Select(p => new PeopleViewModel
         {
           Id = p.Id,
           Name = p.Name,
@@ -62,13 +89,13 @@ namespace starwars_api_net_core.Models
         .ToListAsync();
 
 
-    public Task<List<PeopleResponseViewModel>> GetById(Guid id) =>
+    public Task<List<PeopleViewModel>> GetById(Guid id) =>
       _context.People
         .Include(p => p.HomeWorld)
         .Include(p => p.Films)
         .ThenInclude(pf => pf.Film)
         .Where(p => p.Id == id)
-        .Select(p => new PeopleResponseViewModel
+        .Select(p => new PeopleViewModel
         {
           Id = p.Id,
           Name = p.Name,
@@ -88,12 +115,12 @@ namespace starwars_api_net_core.Models
 
 
 
-    public Task<List<PeopleResponseViewModel>> GetByName(string name) =>
+    public Task<List<PeopleViewModel>> GetByName(string name) =>
       _context.People
         .Include(p => p.Films)
         .ThenInclude(pf => pf.Film)
         .Where(p => EF.Functions.Like(p.Name, $"%{name}%"))
-        .Select(p => new PeopleResponseViewModel
+        .Select(p => new PeopleViewModel
         {
           Id = p.Id,
           Name = p.Name,
