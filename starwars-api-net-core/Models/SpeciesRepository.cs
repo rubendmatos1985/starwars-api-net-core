@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +31,16 @@ namespace starwars_api_net_core.Models
       }
     }
 
-    public Task<Specie> GetById(Guid id)
-    {
-      return _context.Species.FindAsync(id).AsTask();
-    }
+    public Task<Specie> GetById(Guid id) =>
+      _context.Species
+        .FindAsync(id)
+        .AsTask();
+
+
+    public Task<List<Specie>> GetByName(string name) =>
+      _context.Species
+        .Where(sp => EF.Functions.Like(sp.Name, $"%{name}%"))
+        .ToListAsync();
+
   }
 }

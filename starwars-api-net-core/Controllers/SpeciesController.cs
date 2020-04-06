@@ -16,6 +16,7 @@ namespace starwars_api_net_core.Controllers
     {
       _speciesRepository = speciesRepository;
     }
+
     [Route("")]
     public async Task<IActionResult> Get([FromQuery]Guid? Id, [FromQuery] string? Name)
     {
