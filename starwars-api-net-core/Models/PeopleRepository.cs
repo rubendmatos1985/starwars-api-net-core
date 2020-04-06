@@ -24,7 +24,7 @@ namespace starwars_api_net_core.Models
 
     public async Task<AddEntityResponse<People>> Add(PeopleViewModel people)
     {
-      var (Name, Height, Mass, HairColor, SkinColor, EyeColor, BirthYear, Gender, HomeWorld, Films) = people;
+      var (Name, Height, Mass, HairColor, SkinColor, EyeColor, BirthYear, Gender, HomeWorld, Films, Vehicles) = people;
       var newPeople = new People
       {
         Name = Name,
@@ -49,7 +49,11 @@ namespace starwars_api_net_core.Models
         _context.Planets.Attach(peopleHomeworld);
         newPeople.HomeWorld = peopleHomeworld;
       }
-
+      if (Vehicles != null)
+      {
+        var peopleVehicles = Vehicles.Select(v => new VehiclePilot { PeopleId = (Guid)people.Id, VehicleId = (Guid)v.Id });
+        newPeople.Vehicles = peopleVehicles as ICollection<VehiclePilot>;
+      }
       try
       {
         await _context.People.AddAsync(newPeople);
@@ -80,7 +84,7 @@ namespace starwars_api_net_core.Models
           Gender = p.Gender,
           HairColor = p.HairColor,
           Height = p.Height,
-          HomeWorld = new PlanetData { Id = p.HomeWorld.Id, Name=p.Name },
+          HomeWorld = new PlanetData { Id = p.HomeWorld.Id, Name = p.Name },
           Mass = p.Mass,
           SkinColor = p.SkinColor,
           Films = p.Films.Select(pf => new FilmData { Id = pf.Film.Id, Title = pf.Film.Title })
