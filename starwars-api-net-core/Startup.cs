@@ -30,6 +30,7 @@ namespace starwars_api_net_core
       services.AddTransient<IFilmRepository, FilmRepository>();
       services.AddTransient<IPeopleRepository, PeopleRepository>();
       services.AddTransient<IPlanetRepository, PlanetRepository>();
+      services.AddTransient<ISpeciesRepository, SpeciesRepository>();
       services.AddDbContext<StarwarsContext>(options =>
       {
         options.UseSqlServer(Configuration.GetConnectionString("StarwarsDB"));
