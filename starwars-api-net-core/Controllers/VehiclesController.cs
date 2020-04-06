@@ -5,9 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+#nullable enable
 namespace starwars_api_net_core.Controllers
 {
+  [Route("vehicles")]
   public class VehiclesController : ControllerBase
   {
     IVehiclesRepository _vehiclesRepository;
@@ -38,12 +39,12 @@ namespace starwars_api_net_core.Controllers
 
     [HttpPost]
     [Route("add")]
-    public async Task<IActionResult> Add(VehicleViewModel vehicle)
+    public async Task<IActionResult> Add([FromBody]VehicleViewModel vehicle)
     {
       var (EntitySuccessfullyAdded, Entity) = await _vehiclesRepository.Add(vehicle);
       if (EntitySuccessfullyAdded)
       {
-        return Ok(new { status = "success", data = Entity });
+        return RedirectToAction(nameof(Get), new { Id = Entity.Id });
       }
       return Ok(new { status = "error", data = $"not possible add{vehicle.Name}" });
     }
