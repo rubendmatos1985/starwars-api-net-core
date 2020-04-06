@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using starwars_api_net_core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace starwars_api_net_core
 {
@@ -76,12 +73,13 @@ namespace starwars_api_net_core
         .HasOne(vp => vp.People)
         .WithMany(p => p.Vehicles)
         .HasForeignKey(v => v.PeopleId);
-  
+
     }
 
     public DbSet<People> People { get; set; }
     public DbSet<Film> Films { get; set; }
     public DbSet<Planet> Planets { get; set; }
     public DbSet<Specie> Species { get; set; }
+    public DbSet<Vehicle> Vehicles { get; set; }
   }
 }
