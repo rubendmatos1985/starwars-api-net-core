@@ -81,5 +81,6 @@ namespace starwars_api_net_core
     public DbSet<Planet> Planets { get; set; }
     public DbSet<Specie> Species { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
+    public DbSet<Starship> Starship { get; set; }
   }
 }
