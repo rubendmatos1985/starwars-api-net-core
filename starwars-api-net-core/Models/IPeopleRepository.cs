@@ -14,10 +14,10 @@ namespace starwars_api_net_core.Models
 
   public interface IPeopleRepository
   {
+    Task<List<PeopleViewModel>> People { get; }
     Task<List<PeopleViewModel>> GetById(Guid id);
     Task<List<PeopleViewModel>> GetByName(string name);
     Task<List<PeopleViewModel>> GetByGender(string gender);
     Task<AddEntityResponse<People>> Add(PeopleViewModel people);
-    Task<bool> AddFilms(People people, IEnumerable<Guid> filmIds);
   }
 }

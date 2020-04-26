@@ -42,9 +42,8 @@ namespace starwars_api_net_core.Controllers
         var result = await _peopleRepository.GetByName(name);
         return Ok(result);
       }
-
-      IEnumerable<People> emptyPeople = new[] { new People { } };
-      return Ok(emptyPeople);
+      var peopleList = await _peopleRepository.People;
+      return Ok(peopleList);
     }
 
     [HttpPost]
@@ -56,7 +55,7 @@ namespace starwars_api_net_core.Controllers
 
       if (newPeopleAdded.EntitySuccessfullyAdded)
       {
-        return RedirectToAction(nameof(Get), new { Id = newPeopleAdded.Entity.Id });
+        return RedirectToAction(nameof(Get), new { newPeopleAdded.Entity.Id });
       }
 
 

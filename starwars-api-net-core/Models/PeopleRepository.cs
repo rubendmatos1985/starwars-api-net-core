@@ -22,9 +22,36 @@ namespace starwars_api_net_core.Models
       _logger = logger;
     }
 
+    public Task<List<PeopleViewModel>> People => _context.People
+      .Include(p => p.Films)
+      .Include(p => p.HomeWorld)
+      .Include(p => p.Specie)
+      .Include(p => p.Vehicles)
+      .Select(p => new PeopleViewModel
+      {
+        Id = p.Id,
+        Name = p.Name,
+        Films = p.Films.Select(pf => new FilmData {  Id = pf.FilmId, Title = pf.Film.Title }),
+        Vehicles = p.Vehicles.Select(pv => new VehicleData{ Id = pv.VehicleId, Name = pv.Vehicle.Name }),
+        BirthYear = p.BirthYear,
+        EyeColor = p.EyeColor,
+        Gender = p.Gender,
+        HairColor = p.HairColor,
+        Height = p.Height,
+        HomeWorld = new PlanetData { Id = p.HomeWorld.Id, Name = p.HomeWorld.Name },
+        Mass = p.Mass,
+        SkinColor = p.SkinColor,
+        Specie = new SpecieData { Id = p.Specie.Id, Name = p.Specie.Name}
+
+      })
+      .AsNoTracking()
+      .ToListAsync();
+      
+      
+
     public async Task<AddEntityResponse<People>> Add(PeopleViewModel people)
     {
-      var (Name, Height, Mass, HairColor, SkinColor, EyeColor, BirthYear, Gender, HomeWorld, Films, Vehicles) = people;
+      var (Name, Height, Mass, HairColor, SkinColor, EyeColor, BirthYear, Gender, HomeWorld, Films, Vehicles, Specie) = people;
       var newPeople = new People
       {
         Name = Name,
@@ -51,9 +78,17 @@ namespace starwars_api_net_core.Models
       }
       if (Vehicles != null)
       {
-        var peopleVehicles = Vehicles.Select(v => new VehiclePilot { PeopleId = (Guid)people.Id, VehicleId = (Guid)v.Id });
-        newPeople.Vehicles = peopleVehicles as ICollection<VehiclePilot>;
+        var peopleVehicles = Vehicles.Select(v => new VehiclePilot { PeopleId = newPeople.Id, VehicleId = v.Id }).ToList();
+        newPeople.Vehicles = peopleVehicles;
       }
+
+      if(Specie != null)
+      {
+        var peopleSpecie = new Specie { Id = people.Specie.Id };
+        _context.Species.Attach(peopleSpecie);
+        newPeople.Specie = peopleSpecie;
+      }
+    
       try
       {
         await _context.People.AddAsync(newPeople);
@@ -73,7 +108,9 @@ namespace starwars_api_net_core.Models
       _context.People
         .Include(p => p.HomeWorld)
         .Include(p => p.Films)
-        .ThenInclude(pf => pf.Film)
+          .ThenInclude(pf => pf.Film)
+        .Include(p => p.Vehicles)
+          .ThenInclude(vp => vp.Vehicle)
         .Where(p => p.Gender == gender)
         .Select(p => new PeopleViewModel
         {
@@ -87,7 +124,8 @@ namespace starwars_api_net_core.Models
           HomeWorld = new PlanetData { Id = p.HomeWorld.Id, Name = p.Name },
           Mass = p.Mass,
           SkinColor = p.SkinColor,
-          Films = p.Films.Select(pf => new FilmData { Id = pf.Film.Id, Title = pf.Film.Title })
+          Films = p.Films.Select(pf => new FilmData { Id = pf.Film.Id, Title = pf.Film.Title }),
+          Vehicles = p.Vehicles.Select(vp => new VehicleData { Id = vp.Vehicle.Id, Name = vp.Vehicle.Name })
         })
         .AsNoTracking()
         .ToListAsync();
@@ -97,7 +135,8 @@ namespace starwars_api_net_core.Models
       _context.People
         .Include(p => p.HomeWorld)
         .Include(p => p.Films)
-        .ThenInclude(pf => pf.Film)
+        .Include(p => p.Vehicles)
+        .Include(p => p.Specie)
         .Where(p => p.Id == id)
         .Select(p => new PeopleViewModel
         {
@@ -111,7 +150,9 @@ namespace starwars_api_net_core.Models
           HomeWorld = new PlanetData { Id = p.HomeWorld.Id, Name = p.HomeWorld.Name },
           Mass = p.Mass,
           SkinColor = p.SkinColor,
-          Films = p.Films.Select(pf => new FilmData { Id = pf.Film.Id, Title = pf.Film.Title })
+          Films = p.Films.Select(pf => new FilmData { Id = pf.Film.Id, Title = pf.Film.Title }),
+          Vehicles = p.Vehicles.Select(vp => new VehicleData { Id = vp.Vehicle.Id, Name = vp.Vehicle.Name }),
+          Specie = new SpecieData { Id= p.Specie.Id, Name = p.Specie.Name }
         })
         .AsNoTracking()
         .ToListAsync();
@@ -141,20 +182,20 @@ namespace starwars_api_net_core.Models
         .AsNoTracking()
         .ToListAsync();
 
-    public async Task<bool> AddFilms(People people, IEnumerable<Guid> filmIds)
-    {
-      try
-      {
-        people.Films = filmIds.Select(id => new PeopleFilms { FilmId = id, PeopleId = people.Id }).ToList();
-        await _context.SaveChangesAsync();
-        return true;
-      }
-      catch (DbUpdateException ex)
-      {
-        _logger.LogError($"PeopleRepository::AddFilms -> {ex.Message}");
-        return false;
-      }
+    //public async Task<bool> AddFilms(People people, IEnumerable<Guid> filmIds)
+    //{
+    //  try
+    //  {
+    //    people.Films = filmIds.Select(id => new PeopleFilms { FilmId = id, PeopleId = people.Id }).ToList();
+    //    await _context.SaveChangesAsync();
+    //    return true;
+    //  }
+    //  catch (DbUpdateException ex)
+    //  {
+    //    _logger.LogError($"PeopleRepository::AddFilms -> {ex.Message}");
+    //    return false;
+    //  }
 
-    }
+    //}
   }
 }

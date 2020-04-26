@@ -39,11 +39,14 @@ namespace starwars_api_net_core.Models.ViewModels
     [Required]
     public PlanetData? HomeWorld { get; set; }
 
+    
     public IEnumerable<FilmData>? Films { get; set; }
 
     public IEnumerable<VehicleData> Vehicles { get; set; }
 
-    public Specie? Specie { get; set; }
+    [Required]
+    public SpecieData Specie { get; set; }
+
 
     public void Deconstruct(
       out string name,
@@ -56,7 +59,8 @@ namespace starwars_api_net_core.Models.ViewModels
       out string gender,
       out PlanetData? homeworld,
       out IEnumerable<FilmData>? films,
-      out IEnumerable<VehicleData> vehicles
+      out IEnumerable<VehicleData> vehicles,
+      out SpecieData specie
       )
     {
       name = Name;
@@ -70,6 +74,7 @@ namespace starwars_api_net_core.Models.ViewModels
       homeworld = HomeWorld;
       films = Films;
       vehicles = Vehicles;
+      specie = Specie;
     }
 
   }
