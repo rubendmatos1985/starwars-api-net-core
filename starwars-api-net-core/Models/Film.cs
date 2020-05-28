@@ -35,5 +35,7 @@ namespace starwars_api_net_core.Models
 
     public ICollection<VehicleFilm>? Vehicles { get; set; }
 
+    public ICollection<StarshipsFilms>? Starships { get; set; }
+
   }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace starwars_api_net_core.Models.ViewModels.ForeignEntities
 {
-	public class StarhipData
+	public class TransportData
 	{
 		public Guid Id { get; set; }
 		public string Name { get; set; }

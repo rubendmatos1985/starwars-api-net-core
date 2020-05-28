@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,6 +22,8 @@ namespace starwars_api_net_core.Models
 		public double HyperdriveRating { get; set; }
 		public double MGLT { get; set; }
 		public string StarshipClass { get; set; }
+		public ICollection<StarshipsFilms> Films{ get; set; }
+
 	}
 
 }

@@ -1,19 +1,20 @@
-﻿using System;
+﻿using starwars_api_net_core.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace starwars_api_net_core.Models
 {
-  public interface IFilmRepository
-  {
-    Task<List<Film>> Films { get; }
+    public interface IFilmRepository
+    {
+        Task<List<FilmResponseViewModel>> Films { get; }
 
-    Task<Film> GetById(Guid id);
+        Task<FilmResponseViewModel> GetById(Guid id);
 
-    Task<Film> GetByTitle(string name);
+        Task<Film> GetByTitle(string name);
 
-    Task<Film> GetByEpisode(int episode);
+        Task<Film> GetByEpisode(int episode);
 
-    Task<bool> Add(Film film);
-  }
+        Task<bool> Add(Film film);
+    }
 }

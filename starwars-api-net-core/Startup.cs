@@ -12,49 +12,50 @@ using starwars_api_net_core.Infrastructure;
 using starwars_api_net_core.Models;
 namespace starwars_api_net_core
 {
-  public class Startup
-  {
-    public Startup(IConfiguration configuration)
-    {
-      Configuration = configuration;
-    }
+	public class Startup
+	{
+		public Startup(IConfiguration configuration)
+		{
+			Configuration = configuration;
+		}
 
-    public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; }
 
-    // This method gets called by the runtime. Use this method to add services to the container.
-    public void ConfigureServices(IServiceCollection services)
-    {
-      services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseNamingPolicy());  
-      services.AddTransient<IFilmRepository, FilmRepository>();
-      services.AddTransient<IPeopleRepository, PeopleRepository>();
-      services.AddTransient<IPlanetRepository, PlanetRepository>();
-      services.AddTransient<ISpeciesRepository, SpeciesRepository>();
-      services.AddTransient<IVehiclesRepository, VehicleRepository>();
+		// This method gets called by the runtime. Use this method to add services to the container.
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseNamingPolicy());
+			services.AddTransient<IFilmRepository, FilmRepository>();
+			services.AddTransient<IPeopleRepository, PeopleRepository>();
+			services.AddTransient<IPlanetRepository, PlanetRepository>();
+			services.AddTransient<ISpeciesRepository, SpeciesRepository>();
+			services.AddTransient<IStarshipsRepository, StarshipsRepository>();
+			services.AddTransient<IVehiclesRepository, VehicleRepository>();
 
-      services.AddDbContext<StarwarsContext>(options =>
-      {
-        options.UseSqlServer(Configuration.GetConnectionString("StarwarsDB"));
-        options.EnableSensitiveDataLogging(true);
-      });
-      
-    }
+			services.AddDbContext<StarwarsContext>(options =>
+			{
+				options.UseSqlServer(Configuration.GetConnectionString("StarwarsDB"));
+				options.EnableSensitiveDataLogging(true);
+			});
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-      if (env.IsDevelopment())
-      {
-        app.UseDeveloperExceptionPage();
-      }
+		}
 
-      app.UseHttpsRedirection();
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		{
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+			}
 
-      app.UseRouting();
+			app.UseHttpsRedirection();
 
-      app.UseEndpoints(endpoints =>
-      {
-        endpoints.MapControllers();
-      });
-    }
-  }
+			app.UseRouting();
+
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapControllers();
+			});
+		}
+	}
 }
