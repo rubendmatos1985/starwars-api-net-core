@@ -1,4 +1,4 @@
-﻿using starwars_api_net_core.Models.ViewModels;
+﻿using Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

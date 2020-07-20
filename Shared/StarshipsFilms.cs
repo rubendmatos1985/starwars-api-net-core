@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace starwars_api_net_core.Models
+namespace Shared
 {
 	public class StarshipsFilms
 	{

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using starwars_api_net_core.Models;
+using Shared;
 
 
 namespace starwars_api_net_core

@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Shared.ForeignEntities;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace starwars_api_net_core.Models
+namespace Shared
 {
-	public class Starship
+	public class StarshipViewModel
 	{
+
 		public Guid Id { get; set; }
 		public string Name { get; set; }
 		public string Model { get; set; }
@@ -22,8 +23,7 @@ namespace starwars_api_net_core.Models
 		public double HyperdriveRating { get; set; }
 		public double MGLT { get; set; }
 		public string StarshipClass { get; set; }
-		public ICollection<StarshipsFilms> Films{ get; set; }
-
+		public IEnumerable<PeopleData> Pilots { get; set; }
+		public IEnumerable<FilmData> Films { get; set; }
 	}
-
 }

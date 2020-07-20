@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using starwars_api_net_core.Models;
-using starwars_api_net_core.Models.ViewModels;
+using Shared;
 
 namespace starwars_api_net_core.Controllers
 {

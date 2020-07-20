@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shared;
 using starwars_api_net_core.Models;
-using starwars_api_net_core.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using starwars_api_net_core.Models.ViewModels;
-using starwars_api_net_core.Models.ViewModels.ForeignEntities;
+using Shared;
+using Shared.ForeignEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

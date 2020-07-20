@@ -1,14 +1,13 @@
-﻿using starwars_api_net_core.Models.ViewModels.ForeignEntities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace starwars_api_net_core.Models.ViewModels
+namespace Shared
 {
-	public class StarshipViewModel
+	public class Starship
 	{
-
 		public Guid Id { get; set; }
 		public string Name { get; set; }
 		public string Model { get; set; }
@@ -23,7 +22,8 @@ namespace starwars_api_net_core.Models.ViewModels
 		public double HyperdriveRating { get; set; }
 		public double MGLT { get; set; }
 		public string StarshipClass { get; set; }
-		public IEnumerable<PeopleData> Pilots { get; set; }
-		public IEnumerable<FilmData> Films { get; set; }
+		public ICollection<StarshipsFilms> Films{ get; set; }
+
 	}
+
 }

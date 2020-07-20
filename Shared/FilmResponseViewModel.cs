@@ -1,10 +1,10 @@
-﻿using starwars_api_net_core.Models.ViewModels.ForeignEntities;
+﻿using Shared.ForeignEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace starwars_api_net_core.Models.ViewModels
+namespace Shared
 {
     public class FilmResponseViewModel
     {
